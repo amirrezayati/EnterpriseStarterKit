@@ -1,0 +1,41 @@
+## Build Folders
+bin/
+obj/
+out/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## VS Code
+.vscode/
+
+## Rider
+.idea/
+
+## Visual Studio
+.vs/
+
+## Logs
+*.log
+logs/
+
+## Docker
+docker-compose.override.yml
+.env
+
+## Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testsettings
+
+## Others
+*.db
+*.sqlite
+*.bak
+*.mdf
+*.ldf
