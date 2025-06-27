@@ -3,7 +3,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>Amir Rezayati</Authors>
 		<Company>EnterpriseStarterKit</Company>
 		<Description>Shared Kernel for enterprise-grade microservice architecture.</Description>

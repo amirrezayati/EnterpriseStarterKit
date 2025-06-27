@@ -1,32 +1,54 @@
-﻿using IdentityService.Domain.ValueObjects;
+﻿using Ardalis.Result;
+using IdentityService.Domain.ValueObjects;
 using SharedKernel.Base;
 
 namespace IdentityService.Domain.Entities;
 
-public class ApplicationUser : Entity<Guid>, IAggregateRoot
+public sealed class ApplicationUser : AggregateRoot<Guid>
 {
-    public Email Email { get; private set; } = default!;
-    public Password Password { get; private set; } = default!;
+    public Email Email { get; private set; }
+    public Password Password { get; private set; }
     public bool IsActive { get; private set; } = true;
-    public DateTime CreatedAt { get; private set; }
 
-    // برای EF Core
-    private ApplicationUser() { }
-
-    public ApplicationUser(Email email, Password password)
+    private ApplicationUser(Email email, Password password)
     {
         Email = email;
         Password = password;
-        CreatedAt = DateTime.UtcNow;
     }
 
-    public void ChangePassword(Password newPassword)
+    public static Result<ApplicationUser> Create(string email, string password)
     {
-        Guard.AgainstNull(newPassword, nameof(newPassword));
-        Password = newPassword;
+        var emailResult = Email.Create(email);
+        var passwordResult = Password.Create(password);
+
+        var errors = new List<ValidationError>();
+        if (emailResult.Status == ResultStatus.Invalid)
+            errors.AddRange(emailResult.ValidationErrors);
+        if (passwordResult.Status == ResultStatus.Invalid)
+            errors.AddRange(passwordResult.ValidationErrors);
+
+        if (errors.Any())
+            return Result<ApplicationUser>.Invalid(errors);
+
+        var user = new ApplicationUser(emailResult.Value, passwordResult.Value);
+        return Result<ApplicationUser>.Success(user);
     }
 
-    public void Deactivate() => IsActive = false;
+    public Result Activate()
+    {
+        if (IsActive)
+            return Result.Error("User is already active");
 
-    public void Activate() => IsActive = true;
+        IsActive = true;
+        return Result.Success();
+    }
+
+    public Result Deactivate()
+    {
+        if (!IsActive)
+            return Result.Error("User is already inactive");
+
+        IsActive = false;
+        return Result.Success();
+    }
 }

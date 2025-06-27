@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString, o =>
         {
-            o.MigrationsAssembly("Your.Migrations.Assembly");
+            o.EnableRetryOnFailure();
             o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
         }));
 
